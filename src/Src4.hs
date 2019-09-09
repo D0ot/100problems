@@ -60,7 +60,30 @@ newTotient m = newTotHelper factorList
 primeR :: Int -> Int -> [Int]
 primeR p1 p2 = filter (\x -> odd x && isPrime x) [p1..p2]
 
+-- 40
 
-goldbach :: Int -> (Int, Int)
-goldbach m = map (\x y-> )
-    where primeNumbers = primerR 3 (m-3)
+goldbachBase :: Int -> [(Int, Int)]
+goldbachBase m = (filter (\(x, y) -> x + y == m) orgData)
+    where primeNumbers = primeR 3 (m-3)
+          orgData = [(i,j) | i <- primeNumbers, j <- primeNumbers, i <= j]
+
+-- 41
+goldbachListBase :: Int -> Int -> [[(Int, Int)]]
+goldbachListBase m n =  if odd m 
+                    then helper (m+1) n
+                    else helper m n
+    where helper m n =  if m <= n
+                        then (goldbachBase m) : helper (m+2) n
+                        else []
+
+
+-- 42
+goldBachList' :: Int -> Int -> Int -> [(Int, Int)]
+goldBachList' m n q = f2 (map f orgData)
+    where orgData = goldbachListBase m n
+          f = filter (\(x,y) -> x > q) 
+          f2 = foldr (\x acc -> if null x then acc else (head x):acc) []
+
+prettyPrint :: [(Int, Int)] -> String
+prettyPrint [] = []
+prettyPrint ((x,y):ps) = show x ++ " + " ++ show y ++ " = " ++ show (x+y) ++ "\n" ++ prettyPrint ps
